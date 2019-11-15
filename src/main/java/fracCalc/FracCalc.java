@@ -12,11 +12,11 @@ public class FracCalc {
 		// TODO: Read the input from the user and call produceAnswer with an equation
 		Scanner c = new Scanner(System.in);
 		String userInput = c.nextLine();
-		String test = "";
-		test = test + "1";
-		String answer = produceAnswer(userInput);
-		test = answer;
-		System.out.println(test);
+		while (userInput.equals("quit") != true) {
+			String answer = produceAnswer(userInput);
+			System.out.println(answer);
+			userInput = c.nextLine();
+		}
 		c.close();
 	}
 
@@ -34,98 +34,56 @@ public class FracCalc {
 	public static String produceAnswer(String input) {
 		int space = input.indexOf(" ");
 		String firstNum = input.substring(0, space);
-		String  secNum = input.substring(space + 3);
+		String secNum = input.substring(space + 3);
+		int firstWhole = 0;
+		int firstDeno = 0;
+		int firstNumer = 0;
+		if (firstNum.indexOf("/") == -1) {
+			firstWhole = Integer.parseInt(firstNum);
+		}
+		else {
+		if (firstNum.indexOf("_") != -1) {
+			firstWhole = Integer.parseInt(firstNum.substring(0, firstNum.indexOf("_")));
+				firstNumer = Integer.parseInt(firstNum.substring(firstNum.indexOf("_") + 1, firstNum.indexOf("/")));
+				firstDeno = Integer.parseInt(firstNum.substring(firstNum.indexOf("/") + 1));
+		}
+		else if (firstNum.indexOf("/") != -1) {
+			firstNumer = Integer.parseInt(firstNum.substring(0, firstNum.indexOf("/")));
+			firstDeno = Integer.parseInt(firstNum.substring(firstNum.indexOf("/") + 1));
+		}
+		else {
+			firstWhole = Integer.parseInt(firstNum);
+			firstDeno = 1;
+			firstNumer = firstWhole;
+		}
+	}
+		int secWhole = 0;
+		int secNumer = 0;
+		int secDeno = 0;
+		if (secNum.indexOf("/") == -1) {
+			secWhole = Integer.parseInt(secNum);
+			secNumer = 0;
+			secDeno = 1;
+		} else {
+			if (secNum.indexOf("_") != -1) {
+				secWhole = Integer.parseInt(secNum.substring(0, secNum.indexOf("_")));
+				secNumer = Integer.parseInt(secNum.substring(secNum.indexOf("_") + 1, secNum.indexOf("/")));
+				secDeno = Integer.parseInt(secNum.substring(secNum.indexOf(("/")) + 1));
+			} else if (secNum.indexOf("/") != -1){
+				secWhole = 0;
+				secNumer = Integer.parseInt(secNum.substring(0, secNum.indexOf("/")));
+				secDeno = Integer.parseInt(secNum.substring(secNum.indexOf("/") + 1));
+			}
+			else {
+				secWhole = Integer.parseInt(secNum);
+				secDeno = 1;
+				secNumer = secWhole;
+			}
+		}
+		secNum = "whole:" + secWhole + " numerator:" + secNumer + " denominator:" + secDeno;
 		return secNum;
-		
-		// TODO: Implement this function to produce the solution to the input
-		/*int space = 0;
-		int firstDash = 0;
-		int secondDash = 0;
-		String answer = "hhh";
-		space = input.indexOf(" ");
-		String first = input.substring(0, space);
-		String second = input.substring(space + 3, input.length());
-		String operator = input.substring(space + 1, space + 2);
-		int operatorcheck = 0;
-		if (operator.indexOf("+") == 0) {
-			operatorcheck = 1;
-		}
-		if (operator.indexOf("-") == 0) {
-			operatorcheck = 2;
-		}
-		if (operator.indexOf("*") == 0) {
-			operatorcheck = 3;
-		}
-		if (operator.indexOf("/") == 0) {
-			operatorcheck = 4;
-		}
-		firstDash = first.indexOf("/");
-		secondDash = second.indexOf("/");
-		int firstNum = Integer.parseInt(first.substring(0, firstDash));
-		int firstDeno = Integer.parseInt(first.substring(firstDash + 1, first.length()));
-		int secondNum = Integer.parseInt(second.substring(0, secondDash));
-		int secondDeno = Integer.parseInt(second.substring(secondDash + 1, second.length()));
-		int impNum = 0;
-		int impWhole = 0;
-		if (operatorcheck == 1) {
-			int newNum = (firstNum * secondDeno) + (secondNum * firstDeno);
-			int newDeno = secondDeno * firstDeno;
-			if (newNum > newDeno) {
-				
-				impNum = newNum % newDeno;
-				impWhole = newNum / newDeno;
-				impNum = simplifyNum(newNum, newDeno);
-				newDeno = simplifyDeno(newNum, newDeno);
-				impNum = impNum % newDeno;
-				answer = impWhole + "_" + impNum + "/" + newDeno;
-				if (impNum / newDeno == 0) {
-					answer = impWhole + "";
-				}
-			}
-			if (newNum < newDeno) {
-				newDeno = simplifyDeno(newNum, newDeno);
-				newNum = simplifyNum(newNum, newDeno);
-				answer = newNum + "/" + newDeno;
-				if (newNum == 0) {
-					answer = "0";
-				}
+	}
 
-			}
-			if (newNum == newDeno) {
-				answer = "1";
-			}
-		}
-		if (operatorcheck == 2) {
-			int newNum = (firstNum * secondDeno) - (secondNum * firstDeno);
-			int newDeno = secondDeno * firstDeno;
-			int oldDeno = newDeno;
-			if (newNum > newDeno) {
-				
-				impNum = newNum % newDeno;
-				impWhole = newNum / newDeno;
-				impNum = simplifyNum(newNum, newDeno);
-				newDeno = simplifyDeno(newNum, newDeno);
-				impNum = impNum % newDeno;
-				answer = impWhole + "_" + impNum + "/" + newDeno;
-				if (impNum / newDeno == 0) {
-					answer = impWhole + "";
-				}
-			}
-			if (newNum < newDeno) {
-				newDeno = simplifyDeno(newNum, newDeno);
-				int newnewNum = simplifyNum(newNum, oldDeno);
-				answer = newnewNum + "/" + newDeno;
-				if (newNum == 0) {
-					answer = "0";
-				}
-
-			}
-			if (newNum == oldDeno) {
-				answer = "1";
-			}
-		}
-		return answer;
-		*/}
 	public static int simplifyNum(int newNum, int newDeno) {
 		for (int i = 1; i < newDeno; i++) {
 			int checkNum = newNum % i;
@@ -137,6 +95,7 @@ public class FracCalc {
 		}
 		return newNum;
 	}
+
 	public static int simplifyDeno(int newNum, int newDeno) {
 		for (int i = 1; i < newDeno; i++) {
 			int checkNum = newNum % i;
@@ -146,7 +105,7 @@ public class FracCalc {
 				newDeno = newDeno / i;
 			}
 		}
-		
+
 		return newDeno;
 	}
 	// TODO: Fill in the space below with any helper methods that you think you will
