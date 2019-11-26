@@ -40,6 +40,7 @@ public class FracCalc {
 		int firstNumer = 0;
 		if (firstNum.indexOf("/") == -1) {
 			firstWhole = Integer.parseInt(firstNum);
+			firstDeno = 1;
 		}
 		else {
 		if (firstNum.indexOf("_") != -1) {
@@ -78,10 +79,282 @@ public class FracCalc {
 				secWhole = Integer.parseInt(secNum);
 				secDeno = 1;
 				secNumer = secWhole;
+				secWhole = 0;
 			}
 		}
-		secNum = "whole:" + secWhole + " numerator:" + secNumer + " denominator:" + secDeno;
-		return secNum;
+		String answer = "temp";
+		String operator = input.substring(space + 1, space + 2);
+		int operatorcheck = 0;
+		if (operator.indexOf("+") == 0) {
+			operatorcheck = 1;
+		}
+		if (operator.indexOf("-") == 0) {
+			operatorcheck = 2;
+		}
+		if (operator.indexOf("*") == 0) {
+			operatorcheck = 3;
+		}
+		if (operator.indexOf("/") == 0) {
+			operatorcheck = 4;
+		}
+		int impNum = 0;
+		int impWhole = 0;
+		if (operatorcheck == 1) {
+			int newDeno = secDeno * firstDeno;
+			if (firstWhole < 0) {
+				firstNumer += Math.abs(firstWhole * firstDeno);
+				firstNumer *= -1;
+			}
+			else {
+			firstNumer += firstWhole * firstDeno;
+			}
+			if (secWhole < 0) {
+			secNumer += Math.abs(secWhole * secDeno);
+			secNumer *= -1;
+			}
+			else {
+				secNumer += secWhole * secDeno;
+			}
+			int newNum = (firstNumer * secDeno) + (secNumer * firstDeno);
+			if (Math.abs(newNum) > newDeno) {
+				impNum = newNum % newDeno;
+				impWhole = newNum / newDeno;
+				int oldNum = impNum;
+				impNum = simplifyNum(impNum, newDeno);
+				newDeno = simplifyDeno(oldNum, newDeno);
+				if (impNum < 0 && impWhole < 0) {
+					impNum *= -1;
+				}
+				else if (impNum < 0 && impWhole > 0) {
+					impWhole *= -1;
+				}
+				answer = impWhole + "_" + impNum + "/" + newDeno;
+				double bigCheck = (double)impNum/newDeno;
+				if (bigCheck == 0) {
+					answer = impWhole + "";
+				}
+			}
+			if (Math.abs(newNum) < newDeno) {
+				int oldNum = newNum;
+				newDeno = simplifyDeno(newNum, newDeno);
+				newNum = simplifyNum(oldNum, newDeno);
+				if (impWhole != 0) {
+				answer = impWhole + "_" + newNum + "/" + newDeno;
+				}
+				else {
+					answer = newNum + "/" + newDeno;
+				}
+				if (newNum == 0) {
+					answer = "0";
+				}
+
+			}
+			if (Math.abs(newNum) == newDeno) {
+				if (newNum < 0) {
+				answer = Integer.toString(-1);
+				}
+				else {
+					answer = Integer.toString(1);
+				}
+			}
+		}
+		if (operatorcheck == 2) {
+			int newDeno = secDeno * firstDeno;
+			if (firstNumer < 0 || firstWhole < 0) {
+				firstNumer = Math.abs(firstWhole * newDeno) + (firstNumer * secDeno);
+				firstNumer *= -1;
+			}
+			else {
+				firstNumer = (firstWhole * newDeno) + (firstNumer * secDeno);
+			}
+			if (secNumer < 0 || secWhole < 0) {
+				secNumer = Math.abs(secWhole * newDeno) + (secNumer * firstDeno);
+				secNumer *= -1;
+			}
+			else {
+				secNumer = (secWhole * newDeno) + (secNumer * firstDeno);
+			}
+			int newNum = (firstNumer) - (secNumer);
+			if (Math.abs(newNum) > newDeno) {
+				if (impWhole == 0) {
+					impNum = newNum % newDeno;
+				}
+				else {
+				impNum = Math.abs(newNum % newDeno);
+				}
+				impWhole = newNum / newDeno;
+				int oldNum = impNum;
+				impNum = simplifyNum(impNum, newDeno);
+				newDeno = simplifyDeno(oldNum, newDeno);
+				impNum = impNum % newDeno;
+				if (impNum < 0 && impWhole < 0) {
+					impNum *= -1;
+				}
+				else if (impNum < 0 && impWhole > 0) {
+					impWhole *= -1;
+				}
+				answer = impWhole + "_" + impNum + "/" + newDeno;
+				double bigCheck = (double)impNum/newDeno;
+				if (bigCheck == 0) {
+					answer = impWhole + "";
+				}
+			}
+			if (Math.abs(newNum) < newDeno) {
+				int oldDeno = newDeno;
+				newDeno = simplifyDeno(newNum, newDeno);
+				newNum = simplifyNum(newNum, oldDeno);
+				//impWhole = firstWhole - secWhole + impWhole;
+				
+				if (impWhole != 0) {
+					
+					answer = impWhole + "_" + newNum + "/" + newDeno;
+					}
+					else {
+						answer = newNum + "/" + newDeno;
+					}
+				if (newNum == 0) {
+					answer = "0";
+				}
+			}
+			if (Math.abs(newNum) == Math.abs(newDeno)) {
+				answer = Integer.toString(newNum / newDeno);
+			}
+		}
+		if (operatorcheck == 3) {
+			if (firstNumer == 0) {
+				firstNumer = firstWhole;
+			}
+			else {
+				firstNumer += Math.abs(firstWhole) * firstDeno;
+			}
+			if (firstWhole < 0) {
+				firstNumer *= -1;
+			}
+			if (secNumer == 0) {
+				secNumer = secWhole;
+			}
+			else {
+			secNumer += Math.abs(secWhole) * secDeno;
+			}
+			if (secWhole < 0) {
+				secNumer *= -1;
+			}
+			int newDeno = secDeno * firstDeno;
+			int newNum = (firstNumer * secNumer);
+			if (Math.abs(newNum) > newDeno) {
+				impNum = newNum % newDeno;
+				impWhole = newNum / newDeno;
+				int oldNum = impNum;
+				impNum = simplifyNum(impNum, newDeno);
+				newDeno = simplifyDeno(oldNum, newDeno);
+				if ((firstWhole < 0 && secWhole > 0) || (secWhole < 0 && firstWhole > 0)){
+					impNum -= impNum * 2;
+				}
+				if (impNum < 0 && impWhole < 0) {
+					impNum *= -1;
+				}
+				else if (impNum < 0 && impWhole > 0) {
+					impWhole *= -1;
+				}
+				answer = impWhole + "_" + impNum + "/" + newDeno;
+				double bigCheck = (double)impNum/newDeno;
+				if (bigCheck == 0) {
+					answer = impWhole + "";
+				}
+			}
+			if (Math.abs(newNum) < newDeno) {
+				int oldDeno = newDeno;
+				newDeno = simplifyDeno(newNum, newDeno);
+				newNum = simplifyNum(newNum, oldDeno);
+				if (impWhole != 0) {
+				answer = impWhole + "_" + newNum + "/" + newDeno;
+				}
+				else {
+					answer = newNum + "/" + newDeno;
+				}
+				if (newNum == 0) {
+					answer = "0";
+				}
+
+			}
+			if (Math.abs(newNum) == newDeno) {
+				if (newNum < 0) {
+				answer = Integer.toString(-1);
+				}
+				else {
+					answer = Integer.toString(1);
+				}
+			}
+		}
+		if (operatorcheck == 4) {
+			if (firstNumer == 0) {
+				firstNumer = firstWhole;
+			}
+			else {
+				firstNumer += Math.abs(firstWhole) * firstDeno;
+			}
+			if (secNumer == 0) {
+				secNumer = secWhole;
+			}
+			else {
+			secNumer += Math.abs(secWhole) * secDeno;
+			}
+			int newDeno = (secNumer * firstDeno);
+			int newNum = secDeno * firstNumer;
+			if (newDeno < 0 && newNum < 0) {
+				newDeno = Math.abs(newDeno);
+				newNum = Math.abs(newNum);
+			}
+			else if(newDeno < 0 && newNum > 0) {
+				newNum *= -1;
+				newDeno *= -1;
+			}
+			if (Math.abs(newNum) > newDeno) {
+				impNum = newNum % newDeno;
+				impWhole = newNum / newDeno;
+				int oldNum = impNum;
+				impNum = simplifyNum(impNum, newDeno);
+				newDeno = simplifyDeno(oldNum, newDeno);
+				if ((firstWhole < 0 && secWhole > 0) || (secWhole < 0 && firstWhole > 0)){
+					impNum -= impNum * 2;
+				}
+				if (impNum < 0 && impWhole < 0) {
+					impNum *= -1;
+				}
+				else if (impNum < 0 && impWhole > 0) {
+					impWhole *= -1;
+				}
+				answer = impWhole + "_" + impNum + "/" + newDeno;
+				double bigCheck = (double)impNum/newDeno;
+				if (bigCheck == 0) {
+					answer = impWhole + "";
+				}
+			}
+			else if (Math.abs(newNum) < newDeno) {
+				int bigDeno = newDeno;
+				newDeno = simplifyDeno(newNum, newDeno);
+				newNum = simplifyNum(newNum, bigDeno);
+				if (impWhole != 0) {
+				answer = impWhole + "_" + newNum + "/" + newDeno;
+				}
+				else {
+					answer = newNum + "/" + newDeno;
+				}
+				if (newNum == 0) {
+					answer = "0";
+				}
+
+			}
+			if (Math.abs(newNum) == newDeno) {
+				if (newNum < 0) {
+				answer = Integer.toString(-1);
+				}
+				else {
+					answer = Integer.toString(1);
+				}
+			}
+		}
+		return answer;
 	}
 
 	public static int simplifyNum(int newNum, int newDeno) {
@@ -91,6 +364,7 @@ public class FracCalc {
 			if (checkDeno == 0 && checkNum == 0) {
 				newNum = newNum / i;
 				newDeno = newDeno / i;
+				i = 1;
 			}
 		}
 		return newNum;
@@ -103,6 +377,7 @@ public class FracCalc {
 			if (checkDeno == 0 && checkNum == 0) {
 				newNum = newNum / i;
 				newDeno = newDeno / i;
+				i = 1;
 			}
 		}
 
