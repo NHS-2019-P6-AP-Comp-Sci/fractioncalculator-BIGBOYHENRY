@@ -41,23 +41,20 @@ public class FracCalc {
 		if (firstNum.indexOf("/") == -1) {
 			firstWhole = Integer.parseInt(firstNum);
 			firstDeno = 1;
-		}
-		else {
-		if (firstNum.indexOf("_") != -1) {
-			firstWhole = Integer.parseInt(firstNum.substring(0, firstNum.indexOf("_")));
+		} else {
+			if (firstNum.indexOf("_") != -1) {
+				firstWhole = Integer.parseInt(firstNum.substring(0, firstNum.indexOf("_")));
 				firstNumer = Integer.parseInt(firstNum.substring(firstNum.indexOf("_") + 1, firstNum.indexOf("/")));
 				firstDeno = Integer.parseInt(firstNum.substring(firstNum.indexOf("/") + 1));
+			} else if (firstNum.indexOf("/") != -1) {
+				firstNumer = Integer.parseInt(firstNum.substring(0, firstNum.indexOf("/")));
+				firstDeno = Integer.parseInt(firstNum.substring(firstNum.indexOf("/") + 1));
+			} else {
+				firstWhole = Integer.parseInt(firstNum);
+				firstDeno = 1;
+				firstNumer = firstWhole;
+			}
 		}
-		else if (firstNum.indexOf("/") != -1) {
-			firstNumer = Integer.parseInt(firstNum.substring(0, firstNum.indexOf("/")));
-			firstDeno = Integer.parseInt(firstNum.substring(firstNum.indexOf("/") + 1));
-		}
-		else {
-			firstWhole = Integer.parseInt(firstNum);
-			firstDeno = 1;
-			firstNumer = firstWhole;
-		}
-	}
 		int secWhole = 0;
 		int secNumer = 0;
 		int secDeno = 0;
@@ -70,12 +67,11 @@ public class FracCalc {
 				secWhole = Integer.parseInt(secNum.substring(0, secNum.indexOf("_")));
 				secNumer = Integer.parseInt(secNum.substring(secNum.indexOf("_") + 1, secNum.indexOf("/")));
 				secDeno = Integer.parseInt(secNum.substring(secNum.indexOf(("/")) + 1));
-			} else if (secNum.indexOf("/") != -1){
+			} else if (secNum.indexOf("/") != -1) {
 				secWhole = 0;
 				secNumer = Integer.parseInt(secNum.substring(0, secNum.indexOf("/")));
 				secDeno = Integer.parseInt(secNum.substring(secNum.indexOf("/") + 1));
-			}
-			else {
+			} else {
 				secWhole = Integer.parseInt(secNum);
 				secDeno = 1;
 				secNumer = secWhole;
@@ -83,6 +79,10 @@ public class FracCalc {
 			}
 		}
 		String answer = "temp";
+		if (firstDeno == 0 || secDeno == 0) {
+			answer = "Error: Cannot divide by 0";
+			return answer;
+		}
 		String operator = input.substring(space + 1, space + 2);
 		int operatorcheck = 0;
 		if (operator.indexOf("+") == 0) {
@@ -104,15 +104,13 @@ public class FracCalc {
 			if (firstWhole < 0) {
 				firstNumer += Math.abs(firstWhole * firstDeno);
 				firstNumer *= -1;
-			}
-			else {
-			firstNumer += firstWhole * firstDeno;
+			} else {
+				firstNumer += firstWhole * firstDeno;
 			}
 			if (secWhole < 0) {
-			secNumer += Math.abs(secWhole * secDeno);
-			secNumer *= -1;
-			}
-			else {
+				secNumer += Math.abs(secWhole * secDeno);
+				secNumer *= -1;
+			} else {
 				secNumer += secWhole * secDeno;
 			}
 			int newNum = (firstNumer * secDeno) + (secNumer * firstDeno);
@@ -124,24 +122,22 @@ public class FracCalc {
 				newDeno = simplifyDeno(oldNum, newDeno);
 				if (impNum < 0 && impWhole < 0) {
 					impNum *= -1;
-				}
-				else if (impNum < 0 && impWhole > 0) {
+				} else if (impNum < 0 && impWhole > 0) {
 					impWhole *= -1;
 				}
 				answer = impWhole + "_" + impNum + "/" + newDeno;
-				double bigCheck = (double)impNum/newDeno;
+				double bigCheck = (double) impNum / newDeno;
 				if (bigCheck == 0) {
 					answer = impWhole + "";
 				}
 			}
 			if (Math.abs(newNum) < newDeno) {
 				int oldNum = newNum;
-				newDeno = simplifyDeno(newNum, newDeno);
-				newNum = simplifyNum(oldNum, newDeno);
+				newNum = simplifyNum(newNum, newDeno);
+				newDeno = simplifyDeno(oldNum, newDeno);
 				if (impWhole != 0) {
-				answer = impWhole + "_" + newNum + "/" + newDeno;
-				}
-				else {
+					answer = impWhole + "_" + newNum + "/" + newDeno;
+				} else {
 					answer = newNum + "/" + newDeno;
 				}
 				if (newNum == 0) {
@@ -151,9 +147,8 @@ public class FracCalc {
 			}
 			if (Math.abs(newNum) == newDeno) {
 				if (newNum < 0) {
-				answer = Integer.toString(-1);
-				}
-				else {
+					answer = Integer.toString(-1);
+				} else {
 					answer = Integer.toString(1);
 				}
 			}
@@ -163,24 +158,21 @@ public class FracCalc {
 			if (firstNumer < 0 || firstWhole < 0) {
 				firstNumer = Math.abs(firstWhole * newDeno) + (firstNumer * secDeno);
 				firstNumer *= -1;
-			}
-			else {
+			} else {
 				firstNumer = (firstWhole * newDeno) + (firstNumer * secDeno);
 			}
 			if (secNumer < 0 || secWhole < 0) {
 				secNumer = Math.abs(secWhole * newDeno) + (secNumer * firstDeno);
 				secNumer *= -1;
-			}
-			else {
+			} else {
 				secNumer = (secWhole * newDeno) + (secNumer * firstDeno);
 			}
 			int newNum = (firstNumer) - (secNumer);
 			if (Math.abs(newNum) > newDeno) {
 				if (impWhole == 0) {
 					impNum = newNum % newDeno;
-				}
-				else {
-				impNum = Math.abs(newNum % newDeno);
+				} else {
+					impNum = Math.abs(newNum % newDeno);
 				}
 				impWhole = newNum / newDeno;
 				int oldNum = impNum;
@@ -189,12 +181,11 @@ public class FracCalc {
 				impNum = impNum % newDeno;
 				if (impNum < 0 && impWhole < 0) {
 					impNum *= -1;
-				}
-				else if (impNum < 0 && impWhole > 0) {
+				} else if (impNum < 0 && impWhole > 0) {
 					impWhole *= -1;
 				}
 				answer = impWhole + "_" + impNum + "/" + newDeno;
-				double bigCheck = (double)impNum/newDeno;
+				double bigCheck = (double) impNum / newDeno;
 				if (bigCheck == 0) {
 					answer = impWhole + "";
 				}
@@ -203,15 +194,14 @@ public class FracCalc {
 				int oldDeno = newDeno;
 				newDeno = simplifyDeno(newNum, newDeno);
 				newNum = simplifyNum(newNum, oldDeno);
-				//impWhole = firstWhole - secWhole + impWhole;
-				
+				// impWhole = firstWhole - secWhole + impWhole;
+
 				if (impWhole != 0) {
-					
+
 					answer = impWhole + "_" + newNum + "/" + newDeno;
-					}
-					else {
-						answer = newNum + "/" + newDeno;
-					}
+				} else {
+					answer = newNum + "/" + newDeno;
+				}
 				if (newNum == 0) {
 					answer = "0";
 				}
@@ -223,20 +213,18 @@ public class FracCalc {
 		if (operatorcheck == 3) {
 			if (firstNumer == 0) {
 				firstNumer = firstWhole;
-			}
-			else {
+			} else {
 				firstNumer += Math.abs(firstWhole) * firstDeno;
 			}
-			if (firstWhole < 0) {
+			if (firstWhole < 0 && firstNumer > 0) {
 				firstNumer *= -1;
 			}
 			if (secNumer == 0) {
 				secNumer = secWhole;
+			} else {
+				secNumer += Math.abs(secWhole) * secDeno;
 			}
-			else {
-			secNumer += Math.abs(secWhole) * secDeno;
-			}
-			if (secWhole < 0) {
+			if (secWhole < 0 && secNumer > 0) {
 				secNumer *= -1;
 			}
 			int newDeno = secDeno * firstDeno;
@@ -247,17 +235,16 @@ public class FracCalc {
 				int oldNum = impNum;
 				impNum = simplifyNum(impNum, newDeno);
 				newDeno = simplifyDeno(oldNum, newDeno);
-				if ((firstWhole < 0 && secWhole > 0) || (secWhole < 0 && firstWhole > 0)){
+				if ((firstWhole < 0 && secWhole > 0) || (secWhole < 0 && firstWhole > 0)) {
 					impNum -= impNum * 2;
 				}
 				if (impNum < 0 && impWhole < 0) {
 					impNum *= -1;
-				}
-				else if (impNum < 0 && impWhole > 0) {
+				} else if (impNum < 0 && impWhole > 0) {
 					impWhole *= -1;
 				}
 				answer = impWhole + "_" + impNum + "/" + newDeno;
-				double bigCheck = (double)impNum/newDeno;
+				double bigCheck = (double) impNum / newDeno;
 				if (bigCheck == 0) {
 					answer = impWhole + "";
 				}
@@ -267,9 +254,8 @@ public class FracCalc {
 				newDeno = simplifyDeno(newNum, newDeno);
 				newNum = simplifyNum(newNum, oldDeno);
 				if (impWhole != 0) {
-				answer = impWhole + "_" + newNum + "/" + newDeno;
-				}
-				else {
+					answer = impWhole + "_" + newNum + "/" + newDeno;
+				} else {
 					answer = newNum + "/" + newDeno;
 				}
 				if (newNum == 0) {
@@ -279,9 +265,8 @@ public class FracCalc {
 			}
 			if (Math.abs(newNum) == newDeno) {
 				if (newNum < 0) {
-				answer = Integer.toString(-1);
-				}
-				else {
+					answer = Integer.toString(-1);
+				} else {
 					answer = Integer.toString(1);
 				}
 			}
@@ -289,23 +274,26 @@ public class FracCalc {
 		if (operatorcheck == 4) {
 			if (firstNumer == 0) {
 				firstNumer = firstWhole;
-			}
-			else {
+			} else {
 				firstNumer += Math.abs(firstWhole) * firstDeno;
+				if (firstWhole < 0) {
+					firstNumer *= -1;
+				}
 			}
 			if (secNumer == 0) {
 				secNumer = secWhole;
-			}
-			else {
-			secNumer += Math.abs(secWhole) * secDeno;
+			} else {
+				secNumer += Math.abs(secWhole) * secDeno;
+				if (secWhole < 0) {
+					secNumer *= -1;
+				}
 			}
 			int newDeno = (secNumer * firstDeno);
 			int newNum = secDeno * firstNumer;
 			if (newDeno < 0 && newNum < 0) {
 				newDeno = Math.abs(newDeno);
 				newNum = Math.abs(newNum);
-			}
-			else if(newDeno < 0 && newNum > 0) {
+			} else if (newDeno < 0 && newNum > 0) {
 				newNum *= -1;
 				newDeno *= -1;
 			}
@@ -315,29 +303,27 @@ public class FracCalc {
 				int oldNum = impNum;
 				impNum = simplifyNum(impNum, newDeno);
 				newDeno = simplifyDeno(oldNum, newDeno);
-				if ((firstWhole < 0 && secWhole > 0) || (secWhole < 0 && firstWhole > 0)){
+				if ((firstWhole < 0 && secWhole > 0) || (secWhole < 0 && firstWhole > 0)) {
 					impNum -= impNum * 2;
 				}
 				if (impNum < 0 && impWhole < 0) {
 					impNum *= -1;
-				}
-				else if (impNum < 0 && impWhole > 0) {
+				} else if (impNum < 0 && impWhole > 0) {
 					impWhole *= -1;
+					impNum *= -1;
 				}
 				answer = impWhole + "_" + impNum + "/" + newDeno;
-				double bigCheck = (double)impNum/newDeno;
+				double bigCheck = (double) impNum / newDeno;
 				if (bigCheck == 0) {
 					answer = impWhole + "";
 				}
-			}
-			else if (Math.abs(newNum) < newDeno) {
+			} else if (Math.abs(newNum) < newDeno) {
 				int bigDeno = newDeno;
 				newDeno = simplifyDeno(newNum, newDeno);
 				newNum = simplifyNum(newNum, bigDeno);
 				if (impWhole != 0) {
-				answer = impWhole + "_" + newNum + "/" + newDeno;
-				}
-				else {
+					answer = impWhole + "_" + newNum + "/" + newDeno;
+				} else {
 					answer = newNum + "/" + newDeno;
 				}
 				if (newNum == 0) {
@@ -347,16 +333,14 @@ public class FracCalc {
 			}
 			if (Math.abs(newNum) == newDeno) {
 				if (newNum < 0) {
-				answer = Integer.toString(-1);
-				}
-				else {
+					answer = Integer.toString(-1);
+				} else {
 					answer = Integer.toString(1);
 				}
 			}
 		}
 		return answer;
 	}
-
 	public static int simplifyNum(int newNum, int newDeno) {
 		for (int i = 1; i < newDeno; i++) {
 			int checkNum = newNum % i;
@@ -383,7 +367,6 @@ public class FracCalc {
 
 		return newDeno;
 	}
-	// TODO: Fill in the space below with any helper methods that you think you will
-	// need
-
 }
+// TODO: Fill in the space below with any helper methods that you think you will
+// need
