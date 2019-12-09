@@ -327,7 +327,7 @@ public class FracCalc {
 				if (newNum == 0) {
 					answer = "0";
 				}
-
+int commitchecker = 0;
 			}
 			if (Math.abs(newNum) == newDeno) {//checking for negative 1
 				if (newNum < 0) {
@@ -363,7 +363,7 @@ public class FracCalc {
 			}
 		}
 
-		return newDeno;
+		return newDeno;//k
 	}
 }
 // TODO: Fill in the space below with any helper methods that you think you will
