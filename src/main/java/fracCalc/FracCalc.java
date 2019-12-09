@@ -12,7 +12,7 @@ public class FracCalc {
 		// TODO: Read the input from the user and call produceAnswer with an equation
 		Scanner c = new Scanner(System.in);
 		String userInput = c.nextLine();
-		while (userInput.equals("quit") != true) {
+		while (userInput.equals("quit") != true) {//checks for quit
 			String answer = produceAnswer(userInput);
 			System.out.println(answer);
 			userInput = c.nextLine();
@@ -38,10 +38,10 @@ public class FracCalc {
 		int firstWhole = 0;
 		int firstDeno = 0;
 		int firstNumer = 0;
-		if (firstNum.indexOf("/") == -1) {
+		if (firstNum.indexOf("/") == -1) {//checks if its integer
 			firstWhole = Integer.parseInt(firstNum);
 			firstDeno = 1;
-		} else {
+		} else {//separating input
 			if (firstNum.indexOf("_") != -1) {
 				firstWhole = Integer.parseInt(firstNum.substring(0, firstNum.indexOf("_")));
 				firstNumer = Integer.parseInt(firstNum.substring(firstNum.indexOf("_") + 1, firstNum.indexOf("/")));
@@ -58,11 +58,11 @@ public class FracCalc {
 		int secWhole = 0;
 		int secNumer = 0;
 		int secDeno = 0;
-		if (secNum.indexOf("/") == -1) {
+		if (secNum.indexOf("/") == -1) {//checking for integers
 			secWhole = Integer.parseInt(secNum);
 			secNumer = 0;
 			secDeno = 1;
-		} else {
+		} else {//separating input
 			if (secNum.indexOf("_") != -1) {
 				secWhole = Integer.parseInt(secNum.substring(0, secNum.indexOf("_")));
 				secNumer = Integer.parseInt(secNum.substring(secNum.indexOf("_") + 1, secNum.indexOf("/")));
@@ -79,13 +79,13 @@ public class FracCalc {
 			}
 		}
 		String answer = "temp";
-		if (firstDeno == 0 || secDeno == 0) {
+		if (firstDeno == 0 || secDeno == 0) {//error checking
 			answer = "Error: Cannot divide by 0";
 			return answer;
 		}
-		String operator = input.substring(space + 1, space + 2);
+		String operator = input.substring(space + 1, space + 2);//operator defined
 		int operatorcheck = 0;
-		if (operator.indexOf("+") == 0) {
+		if (operator.indexOf("+") == 0) {//check operator
 			operatorcheck = 1;
 		}
 		if (operator.indexOf("-") == 0) {
@@ -99,53 +99,53 @@ public class FracCalc {
 		}
 		int impNum = 0;
 		int impWhole = 0;
-		if (operatorcheck == 1) {
-			int newDeno = secDeno * firstDeno;
-			if (firstWhole < 0) {
+		if (operatorcheck == 1) {//if operator is plus
+			int newDeno = secDeno * firstDeno;//new denominator
+			if (firstWhole < 0) {//checking for negatives
 				firstNumer += Math.abs(firstWhole * firstDeno);
 				firstNumer *= -1;
 			} else {
-				firstNumer += firstWhole * firstDeno;
+				firstNumer += firstWhole * firstDeno;//new numerator
 			}
-			if (secWhole < 0) {
+			if (secWhole < 0) {//checking for negatives
 				secNumer += Math.abs(secWhole * secDeno);
 				secNumer *= -1;
 			} else {
-				secNumer += secWhole * secDeno;
+				secNumer += secWhole * secDeno;//new numerator
 			}
-			int newNum = (firstNumer * secDeno) + (secNumer * firstDeno);
-			if (Math.abs(newNum) > newDeno) {
-				impNum = newNum % newDeno;
-				impWhole = newNum / newDeno;
-				int oldNum = impNum;
+			int newNum = (firstNumer * secDeno) + (secNumer * firstDeno);//adds
+			if (Math.abs(newNum) > newDeno) {//checks if it's going to be a mixed fraction
+				impNum = newNum % newDeno;//takes the new numerator
+				impWhole = newNum / newDeno;//takes the new whole
+				int oldNum = impNum;//temporary storage
 				impNum = simplifyNum(impNum, newDeno);
 				newDeno = simplifyDeno(oldNum, newDeno);
-				if (impNum < 0 && impWhole < 0) {
+				if (impNum < 0 && impWhole < 0) {//negative checking
 					impNum *= -1;
 				} else if (impNum < 0 && impWhole > 0) {
 					impWhole *= -1;
 				}
 				answer = impWhole + "_" + impNum + "/" + newDeno;
-				double bigCheck = (double) impNum / newDeno;
+				double bigCheck = (double) impNum / newDeno;//checking for wholes
 				if (bigCheck == 0) {
 					answer = impWhole + "";
 				}
 			}
-			if (Math.abs(newNum) < newDeno) {
-				int oldNum = newNum;
+			if (Math.abs(newNum) < newDeno) {//checks if it's not going to be a mixed fraction
+				int oldNum = newNum;//temporary storage
 				newNum = simplifyNum(newNum, newDeno);
 				newDeno = simplifyDeno(oldNum, newDeno);
-				if (impWhole != 0) {
+				if (impWhole != 0) {//mixed return
 					answer = impWhole + "_" + newNum + "/" + newDeno;
-				} else {
+				} else {//non-mixed return
 					answer = newNum + "/" + newDeno;
 				}
-				if (newNum == 0) {
+				if (newNum == 0) {//zero checking
 					answer = "0";
 				}
 
 			}
-			if (Math.abs(newNum) == newDeno) {
+			if (Math.abs(newNum) == newDeno) {//checks if it's equal to 1
 				if (newNum < 0) {
 					answer = Integer.toString(-1);
 				} else {
@@ -153,7 +153,7 @@ public class FracCalc {
 				}
 			}
 		}
-		if (operatorcheck == 2) {
+		if (operatorcheck == 2) {//code is exactly the same as the plus, with an operator difference
 			int newDeno = secDeno * firstDeno;
 			if (firstNumer < 0 || firstWhole < 0) {
 				firstNumer = Math.abs(firstWhole * newDeno) + (firstNumer * secDeno);
@@ -167,19 +167,19 @@ public class FracCalc {
 			} else {
 				secNumer = (secWhole * newDeno) + (secNumer * firstDeno);
 			}
-			int newNum = (firstNumer) - (secNumer);
-			if (Math.abs(newNum) > newDeno) {
-				if (impWhole == 0) {
+			int newNum = (firstNumer) - (secNumer);//subtracts
+			if (Math.abs(newNum) > newDeno) {//mixed checking
+				if (impWhole == 0) {//mixed fraction
 					impNum = newNum % newDeno;
 				} else {
 					impNum = Math.abs(newNum % newDeno);
 				}
 				impWhole = newNum / newDeno;
-				int oldNum = impNum;
+				int oldNum = impNum;//temporary storage
 				impNum = simplifyNum(impNum, newDeno);
 				newDeno = simplifyDeno(oldNum, newDeno);
 				impNum = impNum % newDeno;
-				if (impNum < 0 && impWhole < 0) {
+				if (impNum < 0 && impWhole < 0) {//negative checking, making sure "-1_-1/4" doesn't happen
 					impNum *= -1;
 				} else if (impNum < 0 && impWhole > 0) {
 					impWhole *= -1;
@@ -191,11 +191,9 @@ public class FracCalc {
 				}
 			}
 			if (Math.abs(newNum) < newDeno) {
-				int oldDeno = newDeno;
+				int oldDeno = newDeno;//temporary storage
 				newDeno = simplifyDeno(newNum, newDeno);
 				newNum = simplifyNum(newNum, oldDeno);
-				// impWhole = firstWhole - secWhole + impWhole;
-
 				if (impWhole != 0) {
 
 					answer = impWhole + "_" + newNum + "/" + newDeno;
@@ -206,20 +204,20 @@ public class FracCalc {
 					answer = "0";
 				}
 			}
-			if (Math.abs(newNum) == Math.abs(newDeno)) {
+			if (Math.abs(newNum) == Math.abs(newDeno)) {//checks for 1 or -1
 				answer = Integer.toString(newNum / newDeno);
 			}
 		}
-		if (operatorcheck == 3) {
-			if (firstNumer == 0) {
+		if (operatorcheck == 3) {//checks if multiplication
+			if (firstNumer == 0) {//checks if it's an integer
 				firstNumer = firstWhole;
 			} else {
-				firstNumer += Math.abs(firstWhole) * firstDeno;
+				firstNumer += Math.abs(firstWhole) * firstDeno;//multiplies the whole into the numerator
 			}
-			if (firstWhole < 0 && firstNumer > 0) {
+			if (firstWhole < 0 && firstNumer > 0) {//negative checking
 				firstNumer *= -1;
 			}
-			if (secNumer == 0) {
+			if (secNumer == 0) {//does the same for the second numerator
 				secNumer = secWhole;
 			} else {
 				secNumer += Math.abs(secWhole) * secDeno;
@@ -228,14 +226,14 @@ public class FracCalc {
 				secNumer *= -1;
 			}
 			int newDeno = secDeno * firstDeno;
-			int newNum = (firstNumer * secNumer);
-			if (Math.abs(newNum) > newDeno) {
+			int newNum = (firstNumer * secNumer);//multiplies
+			if (Math.abs(newNum) > newDeno) {//checks if it's going to be a mixed fraction
 				impNum = newNum % newDeno;
 				impWhole = newNum / newDeno;
-				int oldNum = impNum;
+				int oldNum = impNum;//temporary storage
 				impNum = simplifyNum(impNum, newDeno);
 				newDeno = simplifyDeno(oldNum, newDeno);
-				if ((firstWhole < 0 && secWhole > 0) || (secWhole < 0 && firstWhole > 0)) {
+				if ((firstWhole < 0 && secWhole > 0) || (secWhole < 0 && firstWhole > 0)) {//checks for negatives
 					impNum -= impNum * 2;
 				}
 				if (impNum < 0 && impWhole < 0) {
@@ -249,7 +247,7 @@ public class FracCalc {
 					answer = impWhole + "";
 				}
 			}
-			if (Math.abs(newNum) < newDeno) {
+			if (Math.abs(newNum) < newDeno) {//checks if it's not going to be a mixed
 				int oldDeno = newDeno;
 				newDeno = simplifyDeno(newNum, newDeno);
 				newNum = simplifyNum(newNum, oldDeno);
@@ -258,12 +256,12 @@ public class FracCalc {
 				} else {
 					answer = newNum + "/" + newDeno;
 				}
-				if (newNum == 0) {
+				if (newNum == 0) {//zero checking
 					answer = "0";
 				}
 
 			}
-			if (Math.abs(newNum) == newDeno) {
+			if (Math.abs(newNum) == newDeno) {//1 and -1 checking
 				if (newNum < 0) {
 					answer = Integer.toString(-1);
 				} else {
@@ -271,16 +269,16 @@ public class FracCalc {
 				}
 			}
 		}
-		if (operatorcheck == 4) {
-			if (firstNumer == 0) {
+		if (operatorcheck == 4) {//the same as multiplication, but with the second numerator and denominator flipped
+			if (firstNumer == 0) {//integer checking
 				firstNumer = firstWhole;
 			} else {
-				firstNumer += Math.abs(firstWhole) * firstDeno;
-				if (firstWhole < 0) {
+				firstNumer += Math.abs(firstWhole) * firstDeno;//multiplies whole into the numerator
+				if (firstWhole < 0) {//negative checking
 					firstNumer *= -1;
 				}
 			}
-			if (secNumer == 0) {
+			if (secNumer == 0) {//does the same for the second part
 				secNumer = secWhole;
 			} else {
 				secNumer += Math.abs(secWhole) * secDeno;
@@ -288,27 +286,27 @@ public class FracCalc {
 					secNumer *= -1;
 				}
 			}
-			int newDeno = (secNumer * firstDeno);
+			int newDeno = (secNumer * firstDeno);//flips the second numerator and the second denominator
 			int newNum = secDeno * firstNumer;
-			if (newDeno < 0 && newNum < 0) {
+			if (newDeno < 0 && newNum < 0) {//checking if both numerator and denominators are negatives
 				newDeno = Math.abs(newDeno);
 				newNum = Math.abs(newNum);
-			} else if (newDeno < 0 && newNum > 0) {
+			} else if (newDeno < 0 && newNum > 0) {//negative checking
 				newNum *= -1;
 				newDeno *= -1;
 			}
-			if (Math.abs(newNum) > newDeno) {
+			if (Math.abs(newNum) > newDeno) {//checks if it's going to be a mixed fraction
 				impNum = newNum % newDeno;
 				impWhole = newNum / newDeno;
 				int oldNum = impNum;
 				impNum = simplifyNum(impNum, newDeno);
 				newDeno = simplifyDeno(oldNum, newDeno);
-				if ((firstWhole < 0 && secWhole > 0) || (secWhole < 0 && firstWhole > 0)) {
+				if ((firstWhole < 0 && secWhole > 0) || (secWhole < 0 && firstWhole > 0)) {//negative checking
 					impNum -= impNum * 2;
 				}
-				if (impNum < 0 && impWhole < 0) {
+				if (impNum < 0 && impWhole < 0) {//checking if both numerator and whole are negatives
 					impNum *= -1;
-				} else if (impNum < 0 && impWhole > 0) {
+				} else if (impNum < 0 && impWhole > 0) {//checking if only one is a negative
 					impWhole *= -1;
 					impNum *= -1;
 				}
@@ -331,7 +329,7 @@ public class FracCalc {
 				}
 
 			}
-			if (Math.abs(newNum) == newDeno) {
+			if (Math.abs(newNum) == newDeno) {//checking for negative 1
 				if (newNum < 0) {
 					answer = Integer.toString(-1);
 				} else {
@@ -343,18 +341,18 @@ public class FracCalc {
 	}
 	public static int simplifyNum(int newNum, int newDeno) {
 		for (int i = 1; i < newDeno; i++) {
-			int checkNum = newNum % i;
+			int checkNum = newNum % i;//checking if both the numerator and the denominator can be divided by something
 			int checkDeno = newDeno % i;
-			if (checkDeno == 0 && checkNum == 0) {
+			if (checkDeno == 0 && checkNum == 0) {//if so, then they both become that divided by i
 				newNum = newNum / i;
 				newDeno = newDeno / i;
-				i = 1;
+				i = 1;//i resets
 			}
 		}
 		return newNum;
 	}
 
-	public static int simplifyDeno(int newNum, int newDeno) {
+	public static int simplifyDeno(int newNum, int newDeno) {//exactly the same as the method above, different return
 		for (int i = 1; i < newDeno; i++) {
 			int checkNum = newNum % i;
 			int checkDeno = newDeno % i;
